@@ -5,3 +5,10 @@ version = 4
 [[package]]
 name = "kosmo_math"
 version = "0.1.0"
+
+[[package]]
+name = "kosmo_physics"
+version = "0.1.0"
+dependencies = [
+ "kosmo_math",
+]

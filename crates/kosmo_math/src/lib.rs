@@ -28,6 +28,22 @@ impl Vec2 {
 
         self / magnitude
     }
+
+    pub fn distance_and_direction(self, other: Vec2) -> (f64, Vec2) {
+        let in_dist = other - self;
+
+        let distance = in_dist.magnitude();
+
+        const TINY: f64 = 1e-10;
+
+        if distance < TINY {
+            return (0.0, Vec2::new(0.0, 0.0));
+        }
+
+        let direction = in_dist / distance;
+
+        (distance, direction)
+    }
 }
 
 impl Add for Vec2 {
@@ -195,5 +211,18 @@ mod tests {
         let b = a.clone();
 
         assert_eq!(a, b);
+    }
+
+    #[test]
+    fn test_distance_and_direction() {
+        let a = Vec2::new(0.0, 0.0);
+        let b = Vec2::new(3.0, 4.0);
+
+        let (distance, direction) = a.distance_and_direction(b);
+
+        assert!(approx_eq(distance, 5.0));
+
+        assert!(approx_eq(direction.x, 0.6));
+        assert!(approx_eq(direction.y, 0.8));
     }
 }
