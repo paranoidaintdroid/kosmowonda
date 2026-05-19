@@ -1,4 +1,5 @@
 use kosmo_math::Vec2;
+use rayon::prelude::*;
 
 //const G: f64 = 6.674e-11;
 const G: f64 = 0.05;
@@ -46,6 +47,49 @@ pub fn accumulate_forces(bodies: &mut Vec<Body>) {
             bodies[i].acceleration = bodies[i].acceleration + force / bodies[i].mass;
             bodies[j].acceleration = bodies[j].acceleration - force / bodies[j].mass;
         }
+    }
+}
+
+pub fn accumulate_forces_parallel(bodies: &mut Vec<Body>) {
+    let temp_bodies = bodies.clone();
+
+    let accelerations: Vec<Vec2> = (0..temp_bodies.len())
+        .into_par_iter()
+        .map(|i| {
+            let mut acc = Vec2::new(0.0, 0.0);
+
+            for j in 0..temp_bodies.len() {
+                if i == j {
+                    continue;
+                }
+
+                let force = gravitational_force(&temp_bodies[i], &temp_bodies[j]);
+
+                acc = acc + force / temp_bodies[i].mass;
+            }
+
+            acc
+        })
+        .collect();
+
+    for (body, acc) in bodies.iter_mut().zip(accelerations) {
+        body.acceleration = acc;
+    }
+}
+
+const THRESHOLD: usize = 100;
+
+pub fn accumulate_forces_adaptive(
+    bodies: &mut Vec<Body>,
+) {
+    if bodies.len()
+        < THRESHOLD
+    {
+        accumulate_forces(bodies);
+    } else {
+        accumulate_forces_parallel(
+            bodies,
+        );
     }
 }
 

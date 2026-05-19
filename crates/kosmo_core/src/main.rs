@@ -3,7 +3,7 @@ use std::time::{Duration, Instant};
 
 use kosmo_math::Vec2;
 use kosmo_math::integrator::symplectic_euler_step;
-use kosmo_physics::{Body, accumulate_forces};
+use kosmo_physics::{Body, accumulate_forces_adaptive};
 use kosmo_render::Renderer;
 
 fn main() {
@@ -29,7 +29,7 @@ fn main() {
     while renderer.is_open() {
         let frame_start = Instant::now();
 
-        accumulate_forces(&mut bodies);
+        accumulate_forces_adaptive(&mut bodies);
 
         for body in bodies.iter_mut() {
             let (new_pos, new_vel) =
