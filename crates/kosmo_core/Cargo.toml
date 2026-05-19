@@ -1,0 +1,9 @@
+[package]
+name = "kosmo_core"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+kosmo_math = { path = "../kosmo_math" }
+kosmo_physics = { path = "../kosmo_physics" }
+kosmo_render = { path = "../kosmo_render" }

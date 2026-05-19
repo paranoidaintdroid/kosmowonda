@@ -1,6 +1,8 @@
 use kosmo_math::Vec2;
 
-const G: f64 = 6.674e-11;
+//const G: f64 = 6.674e-11;
+const G: f64 = 0.05;
+
 const SOFTENING: f64 = 1e-2;
 
 #[derive(Debug, Clone)]
@@ -80,7 +82,6 @@ mod tests {
             Body::new(10.0, Vec2::new(1.0, 0.0), Vec2::new(0.0, 0.0)),
         ];
 
-        // inject garbage acceleration
         bodies[0].acceleration = Vec2::new(999.0, 999.0);
 
         accumulate_forces(&mut bodies);

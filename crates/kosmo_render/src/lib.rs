@@ -23,8 +23,30 @@ impl Renderer {
         }
     }
 
+    pub fn is_open(&self) -> bool {
+        self.window.is_open()
+    }
+
     pub fn clear(&mut self, color: u32) {
         self.buffer.iter_mut().for_each(|pixel| *pixel = color);
+    }
+
+    pub fn fade(&mut self, amount: u8) {
+        for pixel in self.buffer.iter_mut() {
+            let r = ((*pixel >> 16) & 0xFF) as u8;
+
+            let g = ((*pixel >> 8) & 0xFF) as u8;
+
+            let b = (*pixel & 0xFF) as u8;
+
+            let r = r.saturating_sub(amount);
+
+            let g = g.saturating_sub(amount);
+
+            let b = b.saturating_sub(amount);
+
+            *pixel = ((r as u32) << 16) | ((g as u32) << 8) | (b as u32);
+        }
     }
 
     pub fn draw_dot(&mut self, x: usize, y: usize, color: u32) {
@@ -35,6 +57,23 @@ impl Renderer {
         let index = y * self.width + x;
 
         self.buffer[index] = color;
+    }
+
+    pub fn draw_circle(&mut self, cx: isize, cy: isize, radius: isize, color: u32) {
+        for y in (cy - radius)..=(cy + radius) {
+            for x in (cx - radius)..=(cx + radius) {
+                let dx = x - cx;
+                let dy = y - cy;
+
+                if dx * dx + dy * dy <= radius * radius {
+                    if x >= 0 && y >= 0 && (x as usize) < self.width && (y as usize) < self.height {
+                        let index = y as usize * self.width + x as usize;
+
+                        self.buffer[index] = color;
+                    }
+                }
+            }
+        }
     }
 
     pub fn present(&mut self) {
@@ -57,9 +96,5 @@ impl Renderer {
         let clamped_y = screen_y.clamp(0.0, (self.height - 1) as f64) as usize;
 
         (clamped_x, clamped_y)
-    }
-
-    pub fn is_open(&self) -> bool {
-        self.window.is_open()
     }
 }

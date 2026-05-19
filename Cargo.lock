@@ -268,6 +268,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "kosmo_core"
+version = "0.1.0"
+dependencies = [
+ "kosmo_math",
+ "kosmo_physics",
+ "kosmo_render",
+]
+
+[[package]]
 name = "kosmo_math"
 version = "0.1.0"
 
