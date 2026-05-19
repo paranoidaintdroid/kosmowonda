@@ -24,7 +24,7 @@ fn main() {
     let dt = 0.0005;
     let world_scale = 12.0;
 
-    let target_frame_time = Duration::from_millis(6);
+    let target_frame_time = Duration::from_millis(16); // use 16 for 60fps
 
     while renderer.is_open() {
         let frame_start = Instant::now();
